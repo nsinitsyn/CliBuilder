@@ -1,6 +1,7 @@
-﻿using ShellBuilder.Tests.Core.Entities;
+﻿using ShellBuilderCore;
+using ShellBuilderTests.Core.Entities;
 
-namespace ShellBuilder.Tests.Core;
+namespace ShellBuilderTests.Core;
 
 public class CoreTests
 {
@@ -13,7 +14,7 @@ public class CoreTests
 
         TextWriter stringWriter = new StringWriter();
         
-        var shell = new ShellBuilderCore.ShellBuilder()
+        var shell = new ShellBuilder()
             .ReadFrom(stringReader)
             .WriteTo(stringWriter)
             .RegisterCommand("start [[Url]] [[ThreadsCount]]", () => new StartCommandHandler())
@@ -43,7 +44,7 @@ public class CoreTests
 
         TextWriter stringWriter = new StringWriter();
         
-        var shell = new ShellBuilderCore.ShellBuilder()
+        var shell = new ShellBuilder()
             .ReadFrom(stringReader)
             .WriteTo(stringWriter)
             .RegisterCommand("add user [[Username]] [[Age]] [[FullName]] [[Address]]", () => new AddUserCommandHandler())

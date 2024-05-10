@@ -1,4 +1,4 @@
-﻿namespace Calculator;
+﻿namespace Calculator.Commands;
 
 public class TwoNumbersOperationCommand
 {

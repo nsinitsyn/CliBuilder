@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace ShellBuilder.Tests.Parsing;
+namespace ShellBuilderTests.Parsing;
 
 public class FailedParsingTestCases : IEnumerable
 {

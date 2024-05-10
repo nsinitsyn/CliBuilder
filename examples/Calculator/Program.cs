@@ -1,4 +1,4 @@
-﻿using Calculator;
+﻿using Calculator.Commands;
 using ShellBuilderCore;
 
 var cts = new CancellationTokenSource();

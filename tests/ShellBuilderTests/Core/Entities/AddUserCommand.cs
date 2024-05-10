@@ -1,4 +1,4 @@
-namespace ShellBuilder.Tests.Core.Entities;
+namespace ShellBuilderTests.Core.Entities;
 
 public class AddUserCommand
 {

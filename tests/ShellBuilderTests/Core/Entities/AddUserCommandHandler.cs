@@ -1,6 +1,6 @@
 using ShellBuilderCore;
 
-namespace ShellBuilder.Tests.Core.Entities;
+namespace ShellBuilderTests.Core.Entities;
 
 public class AddUserCommandHandler : ICommandHandler<AddUserCommand>
 {

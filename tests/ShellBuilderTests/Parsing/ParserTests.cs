@@ -1,6 +1,6 @@
 using ShellBuilderCore;
 
-namespace ShellBuilder.Tests.Parsing;
+namespace ShellBuilderTests.Parsing;
 
 public class ParserTests
 {

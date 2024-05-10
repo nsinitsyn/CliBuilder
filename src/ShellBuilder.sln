@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellBuilderCore", "ShellBu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8F00C58D-AF1A-4C38-A5B9-7FDAD7312214}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellBuilder.Tests", "..\tests\ShellBuilder.Tests\ShellBuilder.Tests.csproj", "{12D24293-FC2D-4B52-AC40-3361A7E4D539}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellBuilderTests", "..\tests\ShellBuilderTests\ShellBuilderTests.csproj", "{12D24293-FC2D-4B52-AC40-3361A7E4D539}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{F9B6C446-785F-4CFD-831C-F3D8B1CCA860}"
 EndProject

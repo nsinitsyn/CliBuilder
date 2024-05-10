@@ -11,10 +11,4 @@
       <ProjectReference Include="..\..\src\ShellBuilderCore\ShellBuilderCore.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="script">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
 </Project>
