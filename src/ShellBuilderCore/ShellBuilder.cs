@@ -1,4 +1,6 @@
 ﻿using ShellBuilderCore.Command;
+using ShellBuilderCore.Command.Templates;
+using ShellBuilderCore.CommandBuilding;
 using ShellBuilderCore.Validation;
 
 namespace ShellBuilderCore;
@@ -33,7 +35,9 @@ public class ShellBuilder
     {
         var commandType = typeof(TCommand);
 
-        var command = new TextCommandWithFactory<TCommand>(commandType, inputTemplate, handlerFactory, description);
+        var command =
+            new TextCommandWithFactory<TCommand>(commandType, new StringTemplate(inputTemplate), handlerFactory, description);
+        
         _allCommands.Add(command);
 
         return this;
@@ -49,7 +53,43 @@ public class ShellBuilder
 
         var commandType = typeof(TCommand);
 
-        var command = new TextCommandWithHandler<TCommand>(commandType, inputTemplate, handler, description);
+        var command =
+            new TextCommandWithHandler<TCommand>(commandType, new StringTemplate(inputTemplate), handler, description);
+        
+        _allCommands.Add(command);
+
+        return this;
+    }
+
+    public ShellBuilder RegisterCommand<TCommand>(
+        TemplateBuilder templateBuilder, 
+        Func<ICommandHandler<TCommand>> handlerFactory,
+        string? description = null)
+        where TCommand : new()
+    {
+        var commandType = typeof(TCommand);
+
+        var command =
+            new TextCommandWithFactory<TCommand>(commandType, templateBuilder.Build(), handlerFactory, description);
+        
+        _allCommands.Add(command);
+
+        return this;
+    }
+    
+    public ShellBuilder RegisterCommand<TCommand>(
+        TemplateBuilder templateBuilder,
+        Action<TCommand, TextWriter, CancellationToken> handler,
+        string? description = null) 
+        where TCommand : new()
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+
+        var commandType = typeof(TCommand);
+
+        var command =
+            new TextCommandWithHandler<TCommand>(commandType, templateBuilder.Build(), handler, description);
+        
         _allCommands.Add(command);
 
         return this;
@@ -75,7 +115,7 @@ public class ShellBuilder
         if (_generateHelpCommand)
         {
             var helpOutput = string.Join(Environment.NewLine,
-                _allCommands.Select(x => $"{x.InputCommandTemplate} - {x.Description}"));
+                _allCommands.Select(x => $"{x.Template} - {x.Description}"));
             
             RegisterCommand<EmptyCommand>("help", (_, textWriter, _) => textWriter.WriteLine(helpOutput));
         }

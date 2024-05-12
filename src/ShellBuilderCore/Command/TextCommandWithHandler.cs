@@ -1,10 +1,12 @@
+using ShellBuilderCore.Command.Templates;
+
 namespace ShellBuilderCore.Command;
 
 internal class TextCommandWithHandler<TCommand> : TextCommand
 {
     public TextCommandWithHandler(
         Type commandType, 
-        string inputCommandTemplate, 
+        Template inputCommandTemplate, 
         Action<TCommand, TextWriter, CancellationToken> handler,
         string? description)
         : base(commandType, inputCommandTemplate, description)

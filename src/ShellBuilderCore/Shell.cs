@@ -1,5 +1,8 @@
 using System.Reflection;
 using ShellBuilderCore.Command;
+using ShellBuilderCore.Command.Templates;
+using ShellBuilderCore.CommandBuilding;
+using ShellBuilderCore.Parsing;
 
 namespace ShellBuilderCore;
 
@@ -28,7 +31,7 @@ public class Shell
     public void Run(CancellationToken cancellationToken)
     {
         string? unparsedCommand = null;
-
+        
         while (!cancellationToken.IsCancellationRequested)
         {
             try
@@ -45,18 +48,63 @@ public class Shell
                 object? commandInstance = null;
                 foreach (var cmd in _allCommands)
                 {
-                    if (!Parser.TryParse(unparsedCommand.Trim(), cmd.InputCommandTemplate, out var items))
+                    if (cmd.Template is StringTemplate stringTemplate)
                     {
-                        continue;
+                        if (!StringTemplateParser.TryParse(unparsedCommand.Trim(), stringTemplate.InputString,
+                                out var items))
+                        {
+                            continue;
+                        }
+                        
+                        ArgumentNullException.ThrowIfNull(items);
+
+                        foundMatch = true;
+                        command = cmd;
+                        commandInstance = CreateAndFillCommandInstance(cmd, items);
+
+                        break;
                     }
 
-                    ArgumentNullException.ThrowIfNull(items);
+                    if (cmd.Template is ParameterizedTemplate parameterizedTemplate)
+                    {
+                        var parsingResult =
+                            ParameterizedTemplateParser.TryParse(unparsedCommand.Trim(), parameterizedTemplate, cmd);
 
-                    foundMatch = true;
-                    command = cmd;
-                    commandInstance = CreateAndFillCommandInstance(cmd, items);
+                        if (parsingResult is { Parsed: false, CommandMatchedByStartedKeywords: true })
+                        {
+                            // Ошибка ввода - пользователь ошибся в параметрах, дальше искать шаблон не нужно
+                            // todo: вывод ошибки на консоль, но тогда не нужны выводить Command not found ниже.
 
-                    break;
+                            break;
+                        }
+
+                        if (parsingResult is { Parsed: false, NotFoundParameterName: not null })
+                        {
+                            // todo: вывести сообщение о незвестном параметре
+                            break;
+                        }
+                        
+                        if (parsingResult is { Parsed: false, DuplicateParameterName: not null })
+                        {
+                            // todo: вывести сообщение о дубликате
+                            break;
+                        }
+                        
+                        if (parsingResult is { Parsed: false, MissingRequiredParameterNames: not null })
+                        {
+                            // todo: вывести сообщение об отсутствии обязательных аргументов
+                            break;
+                        }
+
+                        if (parsingResult.Parsed)
+                        {
+                            foundMatch = true;
+                            command = cmd;
+                            commandInstance = parsingResult.CommandInstance;
+                        }
+                        
+                        break;
+                    }
                 }
 
                 if (!foundMatch)

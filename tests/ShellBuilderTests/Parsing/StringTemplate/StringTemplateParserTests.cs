@@ -1,13 +1,14 @@
 using ShellBuilderCore;
+using ShellBuilderCore.Parsing;
 
-namespace ShellBuilderTests.Parsing;
+namespace ShellBuilderTests.Parsing.StringTemplate;
 
-public class ParserTests
+public class StringTemplateParserTests
 {
     [TestCaseSource(typeof(SuccessfulParsingTestCases))]
     public void SuccessfulParsingTest(string template, string input, List<(string Name, string Value)> expectedItems)
     {
-        var parsed = Parser.TryParse(input, template, out var items);
+        var parsed = StringTemplateParser.TryParse(input, template, out var items);
         
         Assert.That(parsed, Is.EqualTo(true));
         CollectionAssert.AreEqual(expectedItems, items);
@@ -16,7 +17,7 @@ public class ParserTests
     [TestCaseSource(typeof(FailedParsingTestCases))]
     public void FailedParsingTest(string template, string input)
     {
-        var parsed = Parser.TryParse(input, template, out _);
+        var parsed = StringTemplateParser.TryParse(input, template, out _);
         Assert.That(parsed, Is.EqualTo(false));
     }
 }

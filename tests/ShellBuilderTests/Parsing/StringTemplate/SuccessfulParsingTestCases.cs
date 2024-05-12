@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace ShellBuilderTests.Parsing;
+namespace ShellBuilderTests.Parsing.StringTemplate;
 
 public class SuccessfulParsingTestCases : IEnumerable
 {
