@@ -29,7 +29,7 @@ internal class TemplateParameter
     
     // Имя составного свойства, на которое мапим
     // напр, EnvironmentVariables или Description
-    // Тип такого свойства всегда либо ICollection + наследники, либо POCO-класс
+    // Тип такого свойства всегда либо List<T>, либо POCO-класс
     public string? CompositePropertyName { get; set; }
     
     // Пробелы запрещены

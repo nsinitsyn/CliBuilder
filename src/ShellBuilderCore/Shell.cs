@@ -1,7 +1,6 @@
 using System.Reflection;
 using ShellBuilderCore.Command;
 using ShellBuilderCore.Command.Templates;
-using ShellBuilderCore.CommandBuilding;
 using ShellBuilderCore.Parsing;
 
 namespace ShellBuilderCore;
@@ -78,31 +77,10 @@ public class Shell
 
                         // Команда распознана, но сделана ошибка в параметрах, поэтому дальше команды не ищем.
                         foundMatch = true;
-                        
-                        if (parsingResult is { Parsed: false, NotFoundParameterName: not null })
-                        {
-                            _writer.WriteLine(
-                                $"Parameter {parsingResult.NotFoundParameterName} is unknown for command {parameterizedTemplate.Name}.");
 
-                            parsingError = true;
-                            break;
-                        }
-                        
-                        if (parsingResult is { Parsed: false, DuplicateParameterName: not null })
+                        parsingError = ProcessParsingResult(parsingResult, parameterizedTemplate.Name);
+                        if (parsingError)
                         {
-                            _writer.WriteLine(
-                                $"Found duplicated parameter {parsingResult.DuplicateParameterName} for command {parameterizedTemplate.Name}.");
-                            
-                            parsingError = true;
-                            break;
-                        }
-                        
-                        if (parsingResult is { Parsed: false, MissingRequiredParameterNames: not null })
-                        {
-                            _writer.WriteLine(
-                                $"Missing required parameters {string.Join(", ", parsingResult.MissingRequiredParameterNames)} for command {parameterizedTemplate.Name}.");
-                            
-                            parsingError = true;
                             break;
                         }
 
@@ -146,6 +124,35 @@ public class Shell
                 _writer.WriteLine("Error during command processing.");
             }
         }
+    }
+
+    private bool ProcessParsingResult(ParsingResult parsingResult, string commandName)
+    {
+        if (parsingResult is { Parsed: false, NotFoundParameterName: not null })
+        {
+            _writer.WriteLine(
+                $"Parameter {parsingResult.NotFoundParameterName} is unknown for command {commandName}.");
+
+            return true;
+        }
+                        
+        if (parsingResult is { Parsed: false, DuplicateParameterName: not null })
+        {
+            _writer.WriteLine(
+                $"Found duplicated parameter {parsingResult.DuplicateParameterName} for command {commandName}.");
+                            
+            return true;
+        }
+                        
+        if (parsingResult is { Parsed: false, MissingRequiredParameterNames: not null })
+        {
+            _writer.WriteLine(
+                $"Missing required parameters {string.Join(", ", parsingResult.MissingRequiredParameterNames)} for command {commandName}.");
+                            
+            return true;
+        }
+        
+        return false;
     }
 
     private object CreateAndFillCommandInstance(TextCommand command, List<(string Name, string Value)> namedValues)

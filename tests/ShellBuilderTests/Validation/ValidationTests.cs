@@ -88,6 +88,20 @@ public class ValidationTests
     }
     
     [Test]
+    public void RequiredOnlyNameParameter()
+    {
+        var builder = new ShellBuilder()
+            .RegisterCommand<EmptyCommand>(
+                new TemplateBuilder()
+                    .WithName("run")
+                    .AddParameter(new TemplateParameterBuilder().WithName("-name").IsRequired().OnlyName("Name")),
+                (_, _, _) => { });
+        
+        var exception = Assert.Throws<ValidationException>(() => builder.Build())!;
+        Assert.That(exception.ErrorCode, Is.EqualTo(ValidationErrorCode.RequiredOnlyNameParameter));
+    }
+    
+    [Test]
     public void OnlyNameParameterTypeNotBool()
     {
         var builder = new ShellBuilder()

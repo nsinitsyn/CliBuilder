@@ -9,5 +9,6 @@ public enum ValidationErrorCode
     MissingPropertyInCommandClass,
     DuplicateParameterName,
     RepeatableOnlyNameParameter,
+    RequiredOnlyNameParameter,
     OnlyNameParameterTypeNotBool,
 }

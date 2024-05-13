@@ -62,6 +62,14 @@ internal static class ParameterizedTemplateCommandValidator
                         $"Only-named parameter cannot be repeatable. Parameter name: {parameter.Name}. Template {template.Name}.");
                 }
                 
+                if (parameter.IsRequired)
+                {
+                    // OnlyNameMappedBooleanPropertyName не могут быть IsRequired
+                    throw new ValidationException(
+                        ValidationErrorCode.RequiredOnlyNameParameter,
+                        $"Only-named parameter cannot be required. Parameter name: {parameter.Name}. Template {template.Name}.");
+                }
+                
                 // Все OnlyNameMappedBooleanPropertyName имеют тип bool
                 if (command.CommandType.GetProperty(parameter.OnlyNameMappedBooleanPropertyName).PropertyType !=
                     typeof(bool))

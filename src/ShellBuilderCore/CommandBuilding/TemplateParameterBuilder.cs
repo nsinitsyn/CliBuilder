@@ -49,8 +49,8 @@ public class TemplateParameterBuilder
         return this;
     }
 
-    // Параметр без значения - опциональный - либо указан, либо нет. Не может использоваться с IsRequired=true. Пример: --forced 
-    // Указывается имя булева свойства, на которое мапится.
+    // Параметр без значения - опциональный - либо указан, либо нет. Не может использоваться с IsRequired=true или с IsRepeatable=true.
+    // Пример: --forced. Указывается имя булева свойства, на которое мапится.
     public TemplateParameterBuilder OnlyName(string mappedBooleanPropertyName)
     {
         _onlyNameMappedBooleanPropertyName = mappedBooleanPropertyName;
