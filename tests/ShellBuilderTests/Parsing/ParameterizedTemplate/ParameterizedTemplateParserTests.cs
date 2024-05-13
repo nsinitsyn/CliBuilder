@@ -18,7 +18,7 @@ public class ParameterizedTemplateParserTests
                 new TemplateParameter("-arg3", null, false, false, null, "[[Arg3]]", null)
             ]);
 
-        var input = "run -arg1 144,5 -arg2 \"This is argument 2.\"";
+        var input = "run -arg1 144,5 -arg2 \"This is argument 2!\"";
 
         var cmd = new TextCommandWithHandler<Command1>(typeof(Command1), template, (_, _, _) => { }, null);
         
@@ -31,7 +31,7 @@ public class ParameterizedTemplateParserTests
             var command = (Command1)parsingResult.CommandInstance!;
             
             Assert.That(command.Arg1, Is.EqualTo(144.5));
-            Assert.That(command.Arg2, Is.EqualTo("This is argument 2."));
+            Assert.That(command.Arg2, Is.EqualTo("This is argument 2!"));
         });
     }
     
@@ -151,42 +151,4 @@ public class ParameterizedTemplateParserTests
             Assert.That(parsingResult.MissingRequiredParameterNames[1], Is.EqualTo("-arg3"));
         });
     }
-}
-
-public class Command1
-{
-    public double Arg1 { get; set; }
-    
-    public string? Arg2 { get; set; }
-}
-
-public class Command2
-{
-    public double Arg1 { get; set; }
-    
-    public string? Arg2 { get; set; }
-    
-    public List<string>? Arg3 { get; set; }
-    
-    public bool Arg4 { get; set; }
-    
-    public Arg5? Arg5 { get; set; }
-    
-    public List<Arg6>? Arg6 { get; set; }
-}
-
-public class Arg5
-{
-    public int Var1 { get; set; }
-    
-    public string? Var2 { get; set; }
-    
-    public string? Var3 { get; set; }
-}
-
-public class Arg6
-{
-    public int ItemA { get; set; }
-    
-    public double ItemB { get; set; }
 }

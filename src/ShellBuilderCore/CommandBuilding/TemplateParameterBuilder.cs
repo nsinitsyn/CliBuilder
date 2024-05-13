@@ -11,6 +11,7 @@ public class TemplateParameterBuilder
     private string? _compositePropertyName;
     private string? _valueTemplate;
     private string? _onlyNameMappedBooleanPropertyName;
+    private string? _description;
     
     public TemplateParameterBuilder WithName(string name)
     {
@@ -55,6 +56,12 @@ public class TemplateParameterBuilder
         _onlyNameMappedBooleanPropertyName = mappedBooleanPropertyName;
         return this;
     }
+    
+    public TemplateParameterBuilder WithDescription(string description)
+    {
+        _description = description;
+        return this;
+    }
 
     internal TemplateParameter Build()
     {
@@ -65,6 +72,7 @@ public class TemplateParameterBuilder
             _isRepeatable,
             _compositePropertyName,
             _valueTemplate,
-            _onlyNameMappedBooleanPropertyName);
+            _onlyNameMappedBooleanPropertyName,
+            _description);
     }
 }

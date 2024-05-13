@@ -25,11 +25,7 @@ internal static class Validator
             }
             else if (command.Template.Type == TemplateType.Parameterized)
             {
-                // todo: валидация
-                // уникальность определяется именами шаблона (напр, docker run)
-                // Для одного шаблона имена параметров и алиасы уникальны
-                // Все OnlyNameMappedBooleanPropertyName имеют тип bool
-                // OnlyNameMappedBooleanPropertyName не могут быть IsRepeatable
+                ParameterizedTemplateCommandValidator.Validate(command, generateHelpCommand, inputCommands);
             }
         }
     }

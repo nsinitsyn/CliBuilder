@@ -6,5 +6,8 @@ public enum ValidationErrorCode
     UsingReservedCommandName,
     InputTemplateIsNullOrEmpty,
     DuplicateInputTemplate,
-    MissingPropertyInCommandClass
+    MissingPropertyInCommandClass,
+    DuplicateParameterName,
+    RepeatableOnlyNameParameter,
+    OnlyNameParameterTypeNotBool,
 }

@@ -44,6 +44,7 @@ public class Shell
                 }
 
                 bool foundMatch = false;
+                bool parsingError = false;
                 TextCommand? command = null;
                 object? commandInstance = null;
                 foreach (var cmd in _allCommands)
@@ -70,35 +71,43 @@ public class Shell
                         var parsingResult =
                             ParameterizedTemplateParser.TryParse(unparsedCommand.Trim(), parameterizedTemplate, cmd);
 
-                        if (parsingResult is { Parsed: false, CommandMatchedByStartedKeywords: true })
+                        if (parsingResult is { Parsed: false, CommandMatchedByStartedKeywords: false })
                         {
-                            // Ошибка ввода - пользователь ошибся в параметрах, дальше искать шаблон не нужно
-                            // todo: вывод ошибки на консоль, но тогда не нужны выводить Command not found ниже.
-
-                            break;
+                            continue;
                         }
 
+                        // Команда распознана, но сделана ошибка в параметрах, поэтому дальше команды не ищем.
+                        foundMatch = true;
+                        
                         if (parsingResult is { Parsed: false, NotFoundParameterName: not null })
                         {
-                            // todo: вывести сообщение о незвестном параметре
+                            _writer.WriteLine(
+                                $"Parameter {parsingResult.NotFoundParameterName} is unknown for command {parameterizedTemplate.Name}.");
+
+                            parsingError = true;
                             break;
                         }
                         
                         if (parsingResult is { Parsed: false, DuplicateParameterName: not null })
                         {
-                            // todo: вывести сообщение о дубликате
+                            _writer.WriteLine(
+                                $"Found duplicated parameter {parsingResult.DuplicateParameterName} for command {parameterizedTemplate.Name}.");
+                            
+                            parsingError = true;
                             break;
                         }
                         
                         if (parsingResult is { Parsed: false, MissingRequiredParameterNames: not null })
                         {
-                            // todo: вывести сообщение об отсутствии обязательных аргументов
+                            _writer.WriteLine(
+                                $"Missing required parameters {string.Join(", ", parsingResult.MissingRequiredParameterNames)} for command {parameterizedTemplate.Name}.");
+                            
+                            parsingError = true;
                             break;
                         }
 
                         if (parsingResult.Parsed)
                         {
-                            foundMatch = true;
                             command = cmd;
                             commandInstance = parsingResult.CommandInstance;
                         }
@@ -115,6 +124,11 @@ public class Shell
                     continue;
                 }
 
+                if (parsingError)
+                {
+                    continue;
+                }
+                
                 FindAndInvokeHandler(command!, commandInstance!, unparsedCommand, cancellationToken);
             }
             catch (FormatException ex)

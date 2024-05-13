@@ -9,4 +9,7 @@ internal class StringTemplate : Template
     {
         InputString = inputString;
     }
+
+    public override string HelpHeader => InputString;
+    public override string HelpParameters => string.Empty;
 }

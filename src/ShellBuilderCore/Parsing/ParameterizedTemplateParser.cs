@@ -8,7 +8,8 @@ namespace ShellBuilderCore.Parsing;
 internal static class ParameterizedTemplateParser
 {
     // Регулярное выражение для поиска параметров, заключенных в кавычки.
-    private const string QuotesParametersPattern = "['\"][a-zA-Z0-9-_=,.:;\\/ ]+['\"]";
+    //private const string QuotesParametersPattern = "['\"][a-zA-Z0-9-_=,.:;\\/ ]+['\"]";
+    private const string QuotesParametersPattern = "['\"][^\"]+['\"]";
     
     // Регулярное выражение для поиска параметров, заключенных в [[]]
     private const string ParametersNamesPattern = "\\[\\[[^[]*\\]\\]";
@@ -133,25 +134,12 @@ internal static class ParameterizedTemplateParser
                 if (parameter.CompositePropertyName != null)
                 {
                     // Маппим на поля составного свойства
-                    var compositeProperty = cmd.CommandType.GetProperty(parameter.CompositePropertyName);
+                    var compositeProperty = cmd.CommandType.GetProperty(parameter.CompositePropertyName)!;
 
                     if (parameter.IsRepeatable)
                     {
                         // Значит compositeProperty - наследник ICollection
-                        var list = compositeProperty!.GetValue(commandInstance);
-                        var listElementType = compositeProperty.PropertyType.GenericTypeArguments.First();
-                        
-                        // todo: вынести работу со списком здесь и ниже в общий метод
-                        if (list == null)
-                        {
-                            var listType = typeof(List<>);
-                            var constructedListType = listType.MakeGenericType(listElementType);
-
-                            var instance = Activator.CreateInstance(constructedListType);
-                            
-                            compositeProperty.SetValue(commandInstance, instance);
-                            list = instance;
-                        }
+                        var (list, listElementType) = EnsureListPropertyInitialized(compositeProperty, commandInstance);
                         
                         if (repeatableParameterItem == null)
                         {
@@ -166,7 +154,7 @@ internal static class ParameterizedTemplateParser
                     }
                     else
                     {
-                        var compositePropertyValue = compositeProperty!.GetValue(commandInstance);
+                        var compositePropertyValue = compositeProperty.GetValue(commandInstance);
                         if (compositePropertyValue == null)
                         {
                             compositePropertyValue = Activator.CreateInstance(compositeProperty.PropertyType);
@@ -186,20 +174,8 @@ internal static class ParameterizedTemplateParser
                     if (parameter.IsRepeatable)
                     {
                         // Свойство - список стандартных типов: int, string и т.д.
-                        
-                        var list = property.GetValue(commandInstance);
-                        var listElementType = property.PropertyType.GenericTypeArguments.First();
-                        
-                        if (list == null)
-                        {
-                            var listType = typeof(List<>);
-                            var constructedListType = listType.MakeGenericType(listElementType);
 
-                            var instance = Activator.CreateInstance(constructedListType);
-                            
-                            property.SetValue(commandInstance, instance);
-                            list = instance;
-                        }
+                        var (list, listElementType) = EnsureListPropertyInitialized(property, commandInstance);
                         
                         var listAddMethod = list!.GetType().GetMethod("Add");
                         var convertedValue = Convert.ChangeType(parameterValue, listElementType);
@@ -230,5 +206,24 @@ internal static class ParameterizedTemplateParser
         result.Parsed = true;
         result.CommandInstance = commandInstance;
         return result;
+    }
+
+    private static (object, Type) EnsureListPropertyInitialized(PropertyInfo property, object commandInstance)
+    {
+        var list = property.GetValue(commandInstance);
+        var listElementType = property.PropertyType.GenericTypeArguments.First();
+                        
+        if (list == null)
+        {
+            var listType = typeof(List<>);
+            var constructedListType = listType.MakeGenericType(listElementType);
+
+            var instance = Activator.CreateInstance(constructedListType);
+                            
+            property.SetValue(commandInstance, instance);
+            list = instance;
+        }
+
+        return (list!, listElementType);
     }
 }

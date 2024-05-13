@@ -114,8 +114,7 @@ public class ShellBuilder
 
         if (_generateHelpCommand)
         {
-            var helpOutput = string.Join(Environment.NewLine,
-                _allCommands.Select(x => $"{x.Template} - {x.Description}"));
+            var helpOutput = string.Join(string.Empty, _allCommands.Select(x => x.GenerateHelp()));
             
             RegisterCommand<EmptyCommand>("help", (_, textWriter, _) => textWriter.WriteLine(helpOutput));
         }

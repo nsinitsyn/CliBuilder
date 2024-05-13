@@ -21,11 +21,6 @@ public class TemplateBuilder
 
     internal ParameterizedTemplate Build()
     {
-        if (string.IsNullOrEmpty(_name))
-        {
-            // todo: валидация
-        }
-        
         return new ParameterizedTemplate(_name, _parameters);
     }
 }

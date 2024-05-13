@@ -1,12 +1,14 @@
 ﻿using ShellBuilderCore;
+using ShellBuilderCore.CommandBuilding;
 using ShellBuilderCore.Validation;
+using ShellBuilderTests.Validation.Entities;
 
 namespace ShellBuilderTests.Validation;
 
 public class ValidationTests
 {
     [Test]
-    public void NoRegisteredCommands_Test()
+    public void NoRegisteredCommands()
     {
         var builder = new ShellBuilder();
         
@@ -15,7 +17,7 @@ public class ValidationTests
     }
     
     [Test]
-    public void UsingReservedCommandName_Test()
+    public void UsingReservedCommandName()
     {
         var builder = new ShellBuilder()
             .RegisterCommand<EmptyCommand>("help", (_, _, _) => { })
@@ -26,7 +28,7 @@ public class ValidationTests
     }
     
     [Test]
-    public void InputTemplateIsNullOrEmpty_Test()
+    public void InputTemplateIsNullOrEmpty()
     {
         var builder = new ShellBuilder()
             .RegisterCommand<EmptyCommand>("", (_, _, _) => { });
@@ -36,7 +38,7 @@ public class ValidationTests
     }
     
     [Test]
-    public void DuplicateInputTemplate_Test()
+    public void DuplicateInputTemplate()
     {
         var builder = new ShellBuilder()
             .RegisterCommand<EmptyCommand>("run", (_, _, _) => { })
@@ -54,5 +56,63 @@ public class ValidationTests
         
         var exception = Assert.Throws<ValidationException>(() => builder.Build())!;
         Assert.That(exception.ErrorCode, Is.EqualTo(ValidationErrorCode.MissingPropertyInCommandClass));
+    }
+
+    [Test]
+    public void DuplicateParameterName()
+    {
+        var builder = new ShellBuilder()
+            .RegisterCommand<EmptyCommand>(
+                new TemplateBuilder()
+                    .WithName("run")
+                    .AddParameter(new TemplateParameterBuilder().WithName("-a"))
+                    .AddParameter(new TemplateParameterBuilder().WithName("--a").WithAlias("-a")),
+                (_, _, _) => { });
+        
+        var exception = Assert.Throws<ValidationException>(() => builder.Build())!;
+        Assert.That(exception.ErrorCode, Is.EqualTo(ValidationErrorCode.DuplicateParameterName));
+    }
+    
+    [Test]
+    public void RepeatableOnlyNameParameter()
+    {
+        var builder = new ShellBuilder()
+            .RegisterCommand<EmptyCommand>(
+                new TemplateBuilder()
+                    .WithName("run")
+                    .AddParameter(new TemplateParameterBuilder().WithName("-name").IsRepeatable().OnlyName("Name")),
+                (_, _, _) => { });
+        
+        var exception = Assert.Throws<ValidationException>(() => builder.Build())!;
+        Assert.That(exception.ErrorCode, Is.EqualTo(ValidationErrorCode.RepeatableOnlyNameParameter));
+    }
+    
+    [Test]
+    public void OnlyNameParameterTypeNotBool()
+    {
+        var builder = new ShellBuilder()
+            .RegisterCommand<OnlyNameParameterTypeNotBoolTestCommand>(
+                new TemplateBuilder()
+                    .WithName("run")
+                    .AddParameter(new TemplateParameterBuilder().WithName("-param").OnlyName("Param")),
+                (_, _, _) => { });
+        
+        var exception = Assert.Throws<ValidationException>(() => builder.Build())!;
+        Assert.That(exception.ErrorCode, Is.EqualTo(ValidationErrorCode.OnlyNameParameterTypeNotBool));
+    }
+    
+    [Test]
+    public void DuplicateInputTemplateWithParameterizedTemplate()
+    {
+        var builder = new ShellBuilder()
+            .RegisterCommand<EmptyCommand>("docker run", (_, _, _) => { })
+            .RegisterCommand<EmptyCommand>(
+                new TemplateBuilder()
+                    .WithName("docker run")
+                    .AddParameter(new TemplateParameterBuilder().WithName("-d")),
+                (_, _, _) => { });
+        
+        var exception = Assert.Throws<ValidationException>(() => builder.Build())!;
+        Assert.That(exception.ErrorCode, Is.EqualTo(ValidationErrorCode.DuplicateInputTemplate));
     }
 }

@@ -9,7 +9,8 @@ internal class TemplateParameter
         bool isRepeatable, 
         string? compositePropertyName, 
         string? valueTemplate,
-        string? onlyNameMappedBooleanPropertyName)
+        string? onlyNameMappedBooleanPropertyName,
+        string? description = null)
     {
         Name = name;
         Alias = alias;
@@ -18,13 +19,13 @@ internal class TemplateParameter
         CompositePropertyName = compositePropertyName;
         ValueTemplate = valueTemplate;
         OnlyNameMappedBooleanPropertyName = onlyNameMappedBooleanPropertyName;
+        Description = description;
     }
     
     public string Name { get; set; }
     public string? Alias { get; set; }
-    // todo: проверять что обязательные поля есть в input string, иначе выводить ошибку в консоль с именем поля
     public bool IsRequired { get; set; }
-    public bool IsRepeatable { get; set; } // Если true, то тип свойства обязательно ICollection<T>
+    public bool IsRepeatable { get; set; } // Если true, то тип свойства обязательно List<T>
     
     // Имя составного свойства, на которое мапим
     // напр, EnvironmentVariables или Description
@@ -40,6 +41,8 @@ internal class TemplateParameter
     public string? ValueTemplate { get; set; }
 
     public string? OnlyNameMappedBooleanPropertyName { get; set; }
+    
+    public string? Description { get; private set; }
     
     // docker run {{-p:optional}} [[PortExternal]]:[[PortInternal]] {{--forced:field=Forced}} {{--name:required:alias=-n}} [[Name]] {{-e:optional:repeatable:field=EnvironmentVariables}} [[Name]]=[[Value]]
 }

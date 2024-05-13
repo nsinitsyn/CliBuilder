@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{F9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator", "..\examples\Calculator\Calculator.csproj", "{AE27D77D-D32C-4105-B093-D975E453DCBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockerCli", "..\examples\DockerCli\DockerCli.csproj", "{3E7A7CF8-E9D8-4967-AB2F-94AA90AD770D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,9 +30,14 @@ Global
 		{AE27D77D-D32C-4105-B093-D975E453DCBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE27D77D-D32C-4105-B093-D975E453DCBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE27D77D-D32C-4105-B093-D975E453DCBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E7A7CF8-E9D8-4967-AB2F-94AA90AD770D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E7A7CF8-E9D8-4967-AB2F-94AA90AD770D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E7A7CF8-E9D8-4967-AB2F-94AA90AD770D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E7A7CF8-E9D8-4967-AB2F-94AA90AD770D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{12D24293-FC2D-4B52-AC40-3361A7E4D539} = {8F00C58D-AF1A-4C38-A5B9-7FDAD7312214}
 		{AE27D77D-D32C-4105-B093-D975E453DCBF} = {F9B6C446-785F-4CFD-831C-F3D8B1CCA860}
+		{3E7A7CF8-E9D8-4967-AB2F-94AA90AD770D} = {F9B6C446-785F-4CFD-831C-F3D8B1CCA860}
 	EndGlobalSection
 EndGlobal

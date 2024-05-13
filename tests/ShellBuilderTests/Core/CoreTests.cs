@@ -122,7 +122,7 @@ public class CoreTests
         var shell = new ShellBuilder()
             .ReadFrom(stringReader)
             .WriteTo(stringWriter)
-            .RegisterCommand<DockerRunCommand>(commandTemplateBuilder, (cmd, writer, _) =>
+            .RegisterCommand<DockerRunCommand>(commandTemplateBuilder, (cmd, _, _) =>
             {
                 actualCommand = cmd;
                 cts.Cancel();

@@ -8,8 +8,9 @@ namespace ShellBuilderCore.Parsing;
 internal static class StringTemplateParser
 {
     // Регулярное выражение для поиска параметров, заключенных в кавычки.
-    private const string QuotesParametersPattern = "['\"][a-zA-Z0-9-_=,.:;\\/ ]+['\"]";
-
+    // private const string QuotesParametersPattern = "['\"][a-zA-Z0-9-_=,.:;\\/ ]+['\"]";
+    private const string QuotesParametersPattern = "['\"][^\"]+['\"]";
+    
     private const string RegexToken = "{{REGEX}}";
 
     private static readonly Regex QuotesParametersRegex = new(QuotesParametersPattern, RegexOptions.Compiled);
