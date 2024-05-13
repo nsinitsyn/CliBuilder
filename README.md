@@ -5,7 +5,7 @@ Simple helper for fast creating command line utilities on .NET platform.
 
 ## Quick start
 
-To use CliBuilder, you must create `CliBuilder` instance, setup this and call `Build` method for getting instance of `Cli` class. Than just call `Run` method. This method will be handled all input commands, parse these, create and fill instances of your command classes and call appropriate handlers.
+To use CliBuilder, you must create `CliBuilder` instance, setup this and call `Build` method for getting instance of `Cli` class. Then just call `Run` method. This method will be handled all input commands, parse these, create and fill instances of your command classes and call appropriate handlers.
 
 You can create a Cli using the CliBuilder class as shown below:
 
