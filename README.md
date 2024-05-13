@@ -12,7 +12,10 @@ You can create a Cli using the CliBuilder class as shown below:
 <!-- snippet: quick-start -->
 ```cs
 var cli = new CliBuilder()
-    .RegisterCommand<AddCommand>("add [[A]] [[B]]", (cmd, writer, _) => { writer.WriteLine($"{cmd.A} + {cmd.B} = {cmd.A + cmd.B}"); })
+    .RegisterCommand<AddCommand>(
+        "add [[A]] [[B]]", // pattern for input string parsing
+        (cmd, writer, _) => { writer.WriteLine($"{cmd.A} + {cmd.B} = {cmd.A + cmd.B}"); } // command handler
+    )
     .Build();
 
 cli.Run(CancellationToken.None);
@@ -21,7 +24,7 @@ cli.Run(CancellationToken.None);
 public class AddCommand
 {
     public double A { get; set; } // [[A]] from input string will be assigned to A property
-	public double B { get; set; } // [[B]] from input string will be assigned to B property
+    public double B { get; set; } // [[B]] from input string will be assigned to B property
 }
 ```
 <!-- endSnippet -->
