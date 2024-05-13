@@ -17,7 +17,7 @@ public class ParameterizedTemplateParserTests
                 new TemplateParameter("-arg3", null, false, false, null, "[[Arg3]]", null)
             ]);
 
-        var input = "run -arg1 144,5 -arg2 \"This is argument 2!\"";
+        var input = "run -arg1 144.5 -arg2 \"This is argument 2!\"";
 
         var cmd = new CliCommandWithHandler<Command1>(typeof(Command1), template, (_, _, _) => { }, null);
         
@@ -48,7 +48,7 @@ public class ParameterizedTemplateParserTests
                 new TemplateParameter("-arg6", null, false, true, "Arg6", "[[ItemA]]=[[ItemB]]", null)
             ]);
 
-        var input = "run -arg1 144,5 -arg2 \"This is argument 2.\" -arg6 1993=19 -arg3 Text-1 -arg3 Text_2 -arg4 --argument5 \"190,Some text:another_text\" -arg6 144=67,01";
+        var input = "run -arg1 144.5 -arg2 \"This is argument 2.\" -arg6 1993=19 -arg3 Text-1 -arg3 Text_2 -arg4 --argument5 \"190,Some text:another_text\" -arg6 144=67.01";
 
         var cmd = new CliCommandWithHandler<Command2>(typeof(Command2), template, (_, _, _) => { }, null);
         
@@ -93,7 +93,7 @@ public class ParameterizedTemplateParserTests
                 new TemplateParameter("-arg3", null, true, false, null, "[[Arg3]]", null)
             ]);
 
-        var input = "run -arg1 144,5 -arg4 100";
+        var input = "run -arg1 144.5 -arg4 100";
 
         var cmd = new CliCommandWithHandler<Command1>(typeof(Command1), template, (_, _, _) => { }, null);
         
@@ -114,7 +114,7 @@ public class ParameterizedTemplateParserTests
                 new TemplateParameter("-arg3", null, true, false, null, "[[Arg3]]", null)
             ]);
 
-        var input = "run -arg1 144,5 -arg2 Text -arg1 100";
+        var input = "run -arg1 144.5 -arg2 Text -arg1 100";
 
         var cmd = new CliCommandWithHandler<Command1>(typeof(Command1), template, (_, _, _) => { }, null);
         

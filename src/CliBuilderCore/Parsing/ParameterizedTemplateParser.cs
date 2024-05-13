@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using CliBuilderCore.Command;
 using CliBuilderCore.Command.Templates;
@@ -145,7 +146,7 @@ internal static class ParameterizedTemplateParser
                         }
                         
                         property = repeatableParameterItem!.GetType().GetProperty(parameterName)!;
-                        var convertedValue = Convert.ChangeType(parameterValue, property.PropertyType);
+                        var convertedValue = Convert.ChangeType(parameterValue, property.PropertyType, CultureInfo.InvariantCulture);
                         property.SetValue(repeatableParameterItem, convertedValue);
                     }
                     else
@@ -159,7 +160,7 @@ internal static class ParameterizedTemplateParser
                         
                         property = compositePropertyValue!.GetType().GetProperty(parameterName)!;
                         
-                        var convertedValue = Convert.ChangeType(parameterValue, property!.PropertyType);
+                        var convertedValue = Convert.ChangeType(parameterValue, property!.PropertyType, CultureInfo.InvariantCulture);
                         property.SetValue(compositePropertyValue, convertedValue);
                     }
                 }
@@ -174,12 +175,12 @@ internal static class ParameterizedTemplateParser
                         var (list, listElementType) = EnsureListPropertyInitialized(property, commandInstance);
                         
                         var listAddMethod = list!.GetType().GetMethod("Add");
-                        var convertedValue = Convert.ChangeType(parameterValue, listElementType);
+                        var convertedValue = Convert.ChangeType(parameterValue, listElementType, CultureInfo.InvariantCulture);
                         listAddMethod!.Invoke(list, [convertedValue]);
                     }
                     else
                     {
-                        var convertedValue = Convert.ChangeType(parameterValue, property!.PropertyType);
+                        var convertedValue = Convert.ChangeType(parameterValue, property!.PropertyType, CultureInfo.InvariantCulture);
                         property.SetValue(commandInstance, convertedValue);   
                     }
                 }

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using CliBuilderCore.Command;
 using CliBuilderCore.Command.Templates;
@@ -170,7 +171,7 @@ public class Cli
             }
             else
             {
-                var convertedValue = Convert.ChangeType(item.Value, property.PropertyType);
+                var convertedValue = Convert.ChangeType(item.Value, property.PropertyType, CultureInfo.InvariantCulture);
                 property.SetValue(commandInstance, convertedValue);
             }
         }
