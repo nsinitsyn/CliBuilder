@@ -31,27 +31,31 @@ public class AddCommand
 
 Just run this code in console application, type `add 10 5` and you have got next output: `10 + 5 = 15`
 
-### Commands with named parameters
+### Template and parameter builders
 
-Previous sample used parameters without names. In this case all parameters must be required and ordered. Also they haven't any settings. In more complex cases you may need to setup parameters.
-You can use `TemplateBuilder` in these cases. Sample for describe of some parameters of `docker run` command shown below:
+Previous sample used parameters without names and have the simple input pattern. 
+In more complex cases you may need to setup parameters.
+
+You can use `TemplateBuilder` in these cases. 
+
+Sample for describe of some parameters of `docker run` command shown below:
 
 <!-- snippet: quick-start-named-parameters -->
 ```cs
 var runCommandTemplateBuilder = new TemplateBuilder()
-    .WithName("docker run") // command name
+    .WithName("docker run")
     .AddParameter(new TemplateParameterBuilder()
         .WithName("--name") // parameter name
-        .WithAlias("-n") // parameter alias
-        .IsRequired() // required parameter
+        .WithAlias("-n") // alias
+        .IsRequired() // is required
         .ValueTemplate("[[Name]]") // value template. Will be mapped to Name property of the command class
-        .WithDescription("container name") // parameter description for help generation
+        .WithDescription("container name") // description for help generation
     )
     .AddParameter(new TemplateParameterBuilder()
         .WithName("-e") // this is parameter is optional because IsRequired calling missing
         .IsRepeatable() // parameter can be specified more than once
         .MapToCompositeProperty("EnvironmentVariables") // Will be mapped to property EnvironmentVariables of the command class
-        .ValueTemplate("[[Name]]=[[Value]]") // value template. Will be mapped to properties Name and Value of the property EnvironmentVariables class
+        .ValueTemplate("[[Name]]=[[Value]]") // Will be mapped to properties Name and Value of the property EnvironmentVariables class
         .WithDescription("environment variables")
     );
 
@@ -82,7 +86,7 @@ public class EnvironmentVariable
 ```
 <!-- endSnippet -->
 
-Input for this sample can be:
+Input value for this sample can be:
 
 ```sh
 docker run --name my-container -e Variable1=Value1 -e Variable2=Value2
@@ -90,7 +94,7 @@ docker run --name my-container -e Variable1=Value1 -e Variable2=Value2
 
 ### Support double quotes
 
-You can set the value with spaces in double quotes. For previous sample it can be:
+You must set the value with spaces in double quotes. For previous sample input value can be:
 
 ```sh
 docker run --name my-container -e "ConnectionString=Host = postgres; Port=5432; Database = MyDB;"
