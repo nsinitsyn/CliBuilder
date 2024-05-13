@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\ShellBuilderCore\ShellBuilderCore.csproj" />
+      <ProjectReference Include="..\..\src\CliBuilderCore\CliBuilderCore.csproj" />
     </ItemGroup>
 
 </Project>

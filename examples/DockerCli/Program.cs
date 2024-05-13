@@ -1,6 +1,6 @@
-﻿using DockerCli.Commands;
-using ShellBuilderCore;
-using ShellBuilderCore.CommandBuilding;
+﻿using CliBuilderCore;
+using CliBuilderCore.CommandBuilding;
+using DockerCli.Commands;
 
 var runCommandTemplateBuilder = new TemplateBuilder()
     .WithName("run")
@@ -80,11 +80,11 @@ var buildCommandTemplateBuilder = new TemplateBuilder()
 
 var cts = new CancellationTokenSource();
 
-var shell = new ShellBuilder()
+var cli = new CliBuilder()
     .RegisterCommand<RunCommand>(runCommandTemplateBuilder, (cmd, _, _) => { }, "Run a command in a new container")
     .RegisterCommand<BuildCommand>(buildCommandTemplateBuilder, (cmd, _, _) => { }, "Build an image from a Dockerfile")
     .RegisterCommand<EmptyCommand>("exit", (_, _, _) => { cts.Cancel(); })
     .SupportHelpCommand(generate: true)
     .Build();
 
-shell.Run(cts.Token);
+cli.Run(cts.Token);
