@@ -36,7 +36,7 @@ Just run this code in console application, type `add 10 5` and you have got next
 Previous sample used parameters without names and have the simple input pattern. 
 In more complex cases you may need to setup parameters.
 
-You can use `TemplateBuilder` in these cases. 
+You can use `TemplateBuilder` and `TemplateParameterBuilder` in these cases. 
 
 Sample for describe of some parameters of `docker run` command shown below:
 
@@ -99,3 +99,67 @@ You must set the value with spaces in double quotes. For previous sample input v
 ```sh
 docker run --name my-container -e "ConnectionString=Host = postgres; Port=5432; Database = MyDB;"
 ```
+### Two ways to register handlers
+
+First way - using delegate as shown below:
+
+<!-- snippet: quick-start-two-ways-first -->
+```cs
+var cli = new CliBuilder()
+    .RegisterCommand<AddCommand>(
+        "add [[A]] [[B]]",
+        (cmd, writer, cancellationToken) => { writer.WriteLine($"{cmd.A} + {cmd.B} = {cmd.A + cmd.B}"); } // handler delegate
+    )
+    .Build();
+```
+<!-- endSnippet -->
+
+Second way - implement of ICommandHandler interface and using factory as shown below:
+
+<!-- snippet: quick-start-two-ways-second -->
+```cs
+var cli = new CliBuilder()
+    .RegisterCommand("add [[A]] [[B]]", () => new AddCommandHandler())
+    .Build();
+	
+public class AddCommandHandler : ICommandHandler<AddCommand>
+{
+    public void Handle(AddCommand command, TextWriter writer, CancellationToken cancellationToken)
+    {
+        writer.WriteLine($"{cmd.A} + {cmd.B} = {cmd.A + cmd.B}");
+    }
+}
+```
+<!-- endSnippet -->
+
+### Abstraction from the console
+
+By default CliBuilder using console in and out streams. But you can register any other streams, for example, for reading commands from file and write output to file as shown below:
+
+<!-- snippet: quick-start-no-console -->
+```cs
+var cts = new CancellationTokenSource();
+
+using FileStream inputFileStream = File.Open("input", FileMode.Open, FileAccess.Read);
+using StreamReader inputReader = new StreamReader(inputFileStream);
+
+using FileStream outputFileStream = File.Open("output", FileMode.OpenOrCreate, FileAccess.Write);
+using StreamWriter outputWriter = new StreamWriter(outputFileStream);
+
+var cli = new CliBuilder()
+    .ReadFrom(inputReader)
+    .WriteTo(outputWriter)
+    .RegisterCommand<AddCommand>("add [[A]] [[B]]", (cmd, writer, _) => { writer.WriteLine($"{cmd.A} + {cmd.B} = {cmd.A + cmd.B}"); })
+    .RegisterCommand<EmptyCommand>("exit", (_, _, _) => { cts.Cancel(); })
+    .Build();
+
+cli.Run(cts.Token);
+
+/*
+ input file:
+ add 10 5
+ add 20 30
+ exit
+*/
+```
+<!-- endSnippet -->
