@@ -22,6 +22,13 @@ public class Command2
     public List<Arg6>? Arg6 { get; set; }
 }
 
+public class Command3
+{
+    public string Arg1 { get; set; }
+    
+    public List<int> Arg2 { get; set; }
+}
+
 public class Arg5
 {
     public int Var1 { get; set; }

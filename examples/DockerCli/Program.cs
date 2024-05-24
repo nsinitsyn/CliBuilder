@@ -81,9 +81,9 @@ var buildCommandTemplateBuilder = new TemplateBuilder()
 var cts = new CancellationTokenSource();
 
 var cli = new CliBuilder()
-    .RegisterCommand<RunCommand>(runCommandTemplateBuilder, (cmd, _, _) => { }, "Run a command in a new container")
-    .RegisterCommand<BuildCommand>(buildCommandTemplateBuilder, (cmd, _, _) => { }, "Build an image from a Dockerfile")
-    .RegisterCommand<EmptyCommand>("exit", (_, _, _) => { cts.Cancel(); })
+    .RegisterCommand<RunCommand>(runCommandTemplateBuilder, (cmd, _, _) => { }, "run a command in a new container")
+    .RegisterCommand<BuildCommand>(buildCommandTemplateBuilder, (cmd, _, _) => { }, "build an image from a Dockerfile")
+    .RegisterCommand<EmptyCommand>("exit", (_, _, _) => { cts.Cancel(); }, "exit from application")
     .SupportHelpCommand(generate: true)
     .Build();
 

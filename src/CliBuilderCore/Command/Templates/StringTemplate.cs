@@ -11,5 +11,5 @@ internal class StringTemplate : Template
     }
 
     public override string HelpHeader => InputString;
-    public override string HelpParameters => string.Empty;
+    public override string HelpParameters(List<int> itemsLengths) => string.Empty;
 }

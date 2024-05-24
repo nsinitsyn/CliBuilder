@@ -108,7 +108,7 @@ First way - using delegate as shown below:
 var cli = new CliBuilder()
     .RegisterCommand<AddCommand>(
         "add [[A]] [[B]]",
-        (cmd, writer, cancellationToken) => { writer.WriteLine($"{cmd.A} + {cmd.B} = {cmd.A + cmd.B}"); } // handler delegate
+        (cmd, writer, cancellationToken) => { writer.WriteLine($"{cmd.A} + {cmd.B} = {cmd.A + cmd.B}"); }
     )
     .Build();
 ```

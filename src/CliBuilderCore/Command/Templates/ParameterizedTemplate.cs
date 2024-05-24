@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace CliBuilderCore.Command.Templates;
 
 internal class ParameterizedTemplate : Template
@@ -16,8 +18,37 @@ internal class ParameterizedTemplate : Template
 
     public override string HelpHeader => Name;
 
-    public override string HelpParameters =>
+    public override string HelpParameters(List<int> itemsLengths) =>
         string.Join(
             Environment.NewLine,
-            Parameters.Select(x => $"{x.Name}\t{x.Alias}\t{x.Description}"));
+            Parameters.Select(x =>
+                $"{AddSpaces(x.Name, itemsLengths[0])}\t{AddSpaces(x.Alias, itemsLengths[1])}\t{AddSpaces(x.Description, itemsLengths[2])}"));
+
+    public override List<List<int>> HelpItemsLengths =>
+        Parameters
+            .Select(x => new List<int> { x.Name.Length, x.Alias?.Length ?? 0, x.Description?.Length ?? 0 })
+            .ToList();
+
+    private string? AddSpaces(string? item, int expectedLength)
+    {
+        if (item == null)
+        {
+            return null;
+        }
+        
+        var spacesCount = expectedLength - item.Length;
+        
+        if (spacesCount == 0)
+        {
+            return item;
+        }
+
+        var builder = new StringBuilder(item);
+        for (var i = 0; i < spacesCount; i++)
+        {
+            builder.Append(' ');
+        }
+
+        return builder.ToString();
+    }
 }

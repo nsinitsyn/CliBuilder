@@ -114,8 +114,7 @@ public class CliBuilder
 
         if (_generateHelpCommand)
         {
-            var helpOutput = string.Join(string.Empty, _allCommands.Select(x => x.GenerateHelp()));
-            
+            var helpOutput = HelpGenerator.Generate(_allCommands);
             RegisterCommand<EmptyCommand>("help", (_, textWriter, _) => textWriter.WriteLine(helpOutput));
         }
         

@@ -83,6 +83,38 @@ public class ParameterizedTemplateParserTests
     }
     
     [Test]
+    public void ParsingSuccessful_WithCommand3()
+    {
+        var template = new CliBuilderCore.Command.Templates.ParameterizedTemplate(
+            "run",
+            [
+                new TemplateParameter("-arg1", null, true, false, null, "[[Arg1]]", null),
+                new TemplateParameter("-arg2", null, true, true, null, "[[Arg2]]", null),
+            ]);
+
+        var input = "run -arg1 test-string -arg2 1 -arg2 2 -arg2 10 -arg2 100";
+
+        var cmd = new CliCommandWithHandler<Command3>(typeof(Command3), template, (_, _, _) => { }, null);
+        
+        var parsingResult = ParameterizedTemplateParser.TryParse(input, template, cmd);
+        
+        Assert.That(parsingResult.Parsed, Is.True);
+
+        Assert.Multiple(() =>
+        {
+            var command = (Command3)parsingResult.CommandInstance!;
+            
+            Assert.That(command.Arg1, Is.EqualTo("test-string"));
+
+            Assert.That(command.Arg2, Has.Count.EqualTo(4));
+            Assert.That(command.Arg2![0], Is.EqualTo(1));
+            Assert.That(command.Arg2[1], Is.EqualTo(2));
+            Assert.That(command.Arg2[2], Is.EqualTo(10));
+            Assert.That(command.Arg2[3], Is.EqualTo(100));
+        });
+    }
+    
+    [Test]
     public void ParsingFailed_ParameterNotFound()
     {
         var template = new CliBuilderCore.Command.Templates.ParameterizedTemplate(

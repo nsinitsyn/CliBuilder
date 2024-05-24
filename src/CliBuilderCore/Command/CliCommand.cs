@@ -17,17 +17,17 @@ internal abstract class CliCommand
 
     public Template Template { get; private set; }
     
-    public string GenerateHelp()
+    public string GenerateHelp(List<int> itemsLengths)
     {
         var descriptionBlock = !string.IsNullOrEmpty(_description)
-            ? $"Description: {_description}{Environment.NewLine}"
+            ? $"{_description}{Environment.NewLine}"
             : string.Empty;
         
-        var parametersBlock = !string.IsNullOrEmpty(Template.HelpParameters)
-            ? $"Parameters:{Environment.NewLine}{Template.HelpParameters}{Environment.NewLine}"
+        var parametersBlock = !string.IsNullOrEmpty(Template.HelpParameters(itemsLengths))
+            ? $"Parameters:{Environment.NewLine}{Template.HelpParameters(itemsLengths)}{Environment.NewLine}"
             : string.Empty;
 
         return
-            $"{Environment.NewLine}Command: {Template.HelpHeader}{Environment.NewLine}{descriptionBlock}{parametersBlock}";
+            $"{Environment.NewLine}{Template.HelpHeader}{Environment.NewLine}{descriptionBlock}{parametersBlock}";
     }
 }
