@@ -163,3 +163,41 @@ cli.Run(cts.Token);
 */
 ```
 <!-- endSnippet -->
+
+### Help generation
+
+For help generation use method `SupportHelpCommand` with `true` argument:
+<!-- snippet: quick-start-help-generation -->
+```cs
+var cli = new CliBuilder()
+    // Commands registration block...
+    .SupportHelpCommand(generate: true)
+    .Build();
+```
+<!-- endSnippet -->
+
+For example, below is the generated help output for Docker commands. Full sample you can find in `\examples\DockerCli`.
+```
+run
+run a command in a new container
+Parameters:
+--name          -n      container name                                             
+-e                      environment variables                                      
+-v                      volumes                                                    
+-d                      description                                                
+-p                      ports mapping                                              
+--restart               restart type                                               
+--network               network name                                               
+--rm                    automatically remove the container when it exits           
+
+build
+build an image from a Dockerfile
+Parameters:
+--file          -f      name of the Dockerfile                                     
+--tag           -t      name and optionally a tag in the name:tag format           
+--network               network name                                               
+--rm                    remove intermediate containers after a successful build    
+
+exit
+exit from application
+```
